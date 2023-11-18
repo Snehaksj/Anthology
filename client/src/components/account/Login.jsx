@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-
+import './login.module.css'
 import { TextField, Box, Button, Typography, styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,47 +12,40 @@ const Component = styled(Box)`
     box-shadow: 5px 2px 5px 2px rgb(0 0 0/ 0.6);
 `;
 
-
-const Wrapper = styled(Box)`
-    // padding: 25px 35px;
-    display: flex;
-    flex: 1;
-    overflow: auto;
-    flex-direction: column;
-    & > div, & > button, & > p {
-        margin-top: 20px;
-    }
-`;
-
-// const LoginButton = styled(Button)`
-//     text-transform: none;
-//     background: #FB641B;
-//     color: #fff;
-//     height: 48px;
-//     border-radius: 2px;
-// `;
-
-// const SignupButton = styled(Button)`
-//     text-transform: none;
-//     background: #fff;
-//     color: #2874f0;
-//     height: 48px;
-//     border-radius: 2px;
-//     box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%);
-// `;
-
 const Text = styled(Typography)`
     color: #878787;
     font-size: 12px;
 `;
 
-const Error = styled(Typography)`
-    font-size: 10px;
-    color: #ff6161;
-    line-height: 0;
-    margin-top: 10px;
-    font-weight: 600;
-`
+const ErrorPara = styled(Typography)`
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 2px;
+    color:red;
+    font-size:13px;
+    text-align: center;
+`;
+const LoginValError = styled(Typography)`
+  justify-content: center;
+  flex-direction: column;
+  padding: 4px;
+  margin-bottom:20px;
+  color: red;
+  font-size: 13px;
+  text-align: center;
+  background: ${({ hasErrors }) => (hasErrors ? 'rgba(255, 0, 0, 0.15)' : 'transparent')};
+`;
+const SignupValError = styled(Typography)`
+justify-content: center;
+flex-direction: column;
+padding: 4px;
+margin-bottom:20px;
+color: red;
+font-size: 13px;
+text-align: center;
+  background: ${({ hasErrors }) => (hasErrors ? 'rgba(255, 0, 0, 0.15)' : 'transparent')};
+`;
+
 
 const loginInitialValues = {
     username: '',
@@ -68,17 +61,16 @@ const signupInitialValues = {
 const Login = ({ isUserAuthenticated }) => {
     const [login, setLogin] = useState(loginInitialValues);
     const [signup, setSignup] = useState(signupInitialValues);
-    const [error, showError] = useState('');
+    const [loginErrors, setloginErrors] = useState('');
+    const [signupErrors, setsignupErrors] = useState('');
     const [account, toggleAccount] = useState('login');
+    const [loginvalidationError,setloginvalidationError] = useState('');
+    const [signupvalidationError,setsignupvalidationError] = useState('');
 
     const navigate = useNavigate();
     const { setAccount } = useContext(DataContext);
 
     const imageURL = 'https://www.sesta.it/wp-content/uploads/2021/03/logo-blog-sesta-trasparente.png';
-
-    useEffect(() => {
-        showError(false);
-    }, [login])
 
     const onValueChange = (e) => {
         setLogin({ ...login, [e.target.name]: e.target.value });
@@ -89,9 +81,22 @@ const Login = ({ isUserAuthenticated }) => {
     }
 
     const loginUser = async () => {
-        let response = await API.userLogin(login);
+        const usernameErrors = usernamevalidation(login);
+        const passwordErrors = passwordvalidation(login);
+    
+      setloginErrors({
+        username: usernameErrors.username || '',
+        password: passwordErrors.password || '',
+      });
+      console.log(loginErrors);
+      if(
+      Object.keys(usernameErrors).length === 0 &&
+      Object.keys(passwordErrors).length === 0){
+        try{
+            console.log("enters here")
+            let response = await API.userLogin(login);
         if (response.isSuccess) {
-            showError('');
+            setloginvalidationError('');
 
             sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
             sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
@@ -101,39 +106,118 @@ const Login = ({ isUserAuthenticated }) => {
             setLogin(loginInitialValues);
             navigate('/');
         } else {
-            showError('Something went wrong! please try again later');
+            setloginvalidationError('Invalid username or password');
         }
     }
-
+    catch(err){
+        setloginvalidationError('Invalid username or password');
+    }
+    }
+    }
     const signupUser = async () => {
+        const nameErrors = namevalidation(signup);
+        const usernameErrors = usernamevalidation(signup);
+        const passwordErrors = passwordvalidation(signup);
+    
+      setsignupErrors({
+        name: nameErrors.name || '',
+        username: usernameErrors.username || '',
+        password: passwordErrors.password || '',
+      });
+      if(Object.keys(nameErrors).length === 0 &&
+      Object.keys(usernameErrors).length === 0 &&
+      Object.keys(passwordErrors).length === 0){
+        try{
         let response = await API.userSignup(signup);
         if (response.isSuccess) {
-            showError('');
+            signupvalidationError('');
             setSignup(signupInitialValues);
             toggleAccount('login');
         } else {
-            showError('Something went wrong! please try again later');
+            setsignupvalidationError('Username already exists');
         }
+      }
+      catch(err){
+        setsignupvalidationError('Username already exists');
+      }
     }
+    }
+    const handleloginusernameBlur = () => {
+        const errors = usernamevalidation(login);
+        setloginErrors(prevErrors => ({
+          ...prevErrors,
+          username: errors.username || '',
+      }));
+    };
+    const handleloginpasswordBlur = () => {
+      const errors=passwordvalidation(login);
+      setloginErrors(prevErrors => ({
+        ...prevErrors,
+        password: errors.password || '',
+    }));
+  };
 
+  const handlesignupusernameBlur = () => {
+    const errors = usernamevalidation(signup);
+    setsignupErrors(prevErrors => ({
+        ...prevErrors,
+        username: errors.username || '',
+    }));
+  };
+
+  const handlesignuppasswordBlur = () => {
+    const errors = passwordvalidation(signup);
+    setsignupErrors(prevErrors => ({
+        ...prevErrors,
+        password: errors.password || '',
+    }));
+  };
+
+  const handlesignupnameBlur = () => {
+    const errors = namevalidation(signup);
+    setsignupErrors(prevErrors => ({
+        ...prevErrors,
+        name: errors.name || '',
+    }));
+  };
+    const usernamevalidation = (values) =>{
+        const errors={};
+        const usernameregex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+          if(!values.username){
+            errors.username = "Username is required";
+          }
+          else if(!usernameregex.test(values.username)){
+            errors.username = "Invalid Username";
+          }
+        return errors;
+      };
+      const passwordvalidation = (values) =>{
+        const errors={};
+        if(!values.password){
+          errors.password = "Password is required";
+        }
+        else if(values.password.length<8){
+          errors.password = "Password must be minimum 8 characters";
+        }
+        return errors;
+      };
+      const namevalidation = (values) =>{
+        const errors={};
+          if(!values.name){
+            errors.name = "Name is required";
+          }
+        return errors;
+      };
     const toggleSignup = () => {
         account === 'signup' ? toggleAccount('login') : toggleAccount('signup');
     }
 
-    const backgroundStyle = {
-    background: 'linear-gradient(to right, rgb(248, 126, 126) -0.5%, rgb(251, 206, 143) 35.3%, rgb(184, 252, 233) 67.2%, rgb(118, 162, 229) 92.3%)',
-    height:'111.7vh',
-    marginTop:'-70px',
-    fontSize:'50px',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat'
-    }
     const loginStyle={ fontFamily:"'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif'",
     fontSize:'40px'
     };
     const boxStyle={background:'rgba(255, 255, 255, 0.923)',
     width:'350px',
-    height:'480px',
+    height:'490px',
     textAlign: 'center',
     top:'50%',
     left:'50%',
@@ -151,7 +235,7 @@ const Login = ({ isUserAuthenticated }) => {
     };
     const textStyle={
         
-        marginBottom:'20px'
+        marginBottom:'8px'
     };
     const orStyle={
         color:'#878787',
@@ -166,19 +250,25 @@ const Login = ({ isUserAuthenticated }) => {
         marginTop:'10px',
     };
     return (
-        <body style={backgroundStyle}>
+        <body>
         <Component>
             <Box style={boxStyle}>
                 {
                     account === 'login' ?
                     <>
                     <p style={loginStyle}>Login</p>
+                    <LoginValError hasErrors={Boolean(loginvalidationError)}>
+                    {loginvalidationError}
+                    </LoginValError> 
                         <Box style={boxStyle2}>
                             
-                            <TextField variant="standard" value={login.username}  style={textStyle} onChange={(e) => onValueChange(e)} name='username' label='Enter Username' />
-                            <TextField  variant="standard" type="password" value={login.password}  style={textStyle} onChange={(e) => onValueChange(e)} name='password' label='Enter Password'/>
+                            <TextField variant="standard" value={login.username}  style={textStyle} onChange={(e) => onValueChange(e)} name='username' label='Enter Username'onBlur={() =>
+                              handleloginusernameBlur()}/>
+                        <ErrorPara>{loginErrors.username}</ErrorPara>
+                            <TextField  variant="standard" type="password" value={login.password}  style={textStyle} onChange={(e) => onValueChange(e)} name='password' label='Enter Password'onBlur={() =>
+                              handleloginpasswordBlur()}/>
+                        <ErrorPara>{loginErrors.password}</ErrorPara>
 
-                            {error && <Error>{error}</Error>}
 
                             <Button variant="contained" style={loginButtonStyle} onClick={() => loginUser()} >Login</Button>
                             <Text style={orStyle}>OR</Text>
@@ -188,11 +278,19 @@ const Login = ({ isUserAuthenticated }) => {
                         :
                         <>
                         <p style={loginStyle}>Sign Up</p>
+                        <SignupValError hasErrors={Boolean(signupvalidationError)}>
+                        {signupvalidationError}
+                        </SignupValError>
                         <Box style={boxStyle2}>
-                            <TextField variant="standard" style={textStyle} onChange={(e) => onInputChange(e)} name='name' label='Enter Name' />
-                            <TextField variant="standard" style={textStyle} onChange={(e) => onInputChange(e)} name='username' label='Enter Username' />
-                            <TextField variant="standard" type="password" style={textStyle} onChange={(e) => onInputChange(e)} name='password' label='Enter Password' />
-
+                            <TextField variant="standard" style={textStyle} value={signup.name} onChange={(e) => onInputChange(e)} name='name' label='Enter Name' onBlur={() =>
+                              handlesignupnameBlur()}/>
+                              <ErrorPara>{signupErrors.name}</ErrorPara>
+                            <TextField variant="standard" style={textStyle} value={signup.username} onChange={(e) => onInputChange(e)} name='username' label='Enter Username' onBlur={() =>
+                              handlesignupusernameBlur()}/>
+                              <ErrorPara>{signupErrors.username}</ErrorPara>
+                            <TextField variant="standard" type="password" style={textStyle} value={signup.password} onChange={(e) => onInputChange(e)} name='password' label='Enter Password' onBlur={() =>
+                              handlesignuppasswordBlur()}/>
+                                <ErrorPara>{signupErrors.password}</ErrorPara>
                             <Button variant="contained" style={loginButtonStyle} onClick={() => signupUser()} >Signup</Button>
                             <Text style={orStyle}>OR</Text>
                             <Button  style={SignUpButtonStyle} onClick={() => toggleSignup()}>Already have an account</Button>
