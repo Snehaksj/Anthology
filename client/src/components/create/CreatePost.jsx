@@ -8,7 +8,9 @@ import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
 const boxStyle = {
-    margin:'80px 50px 5px 50px'
+    margin:'80px 50px 5px 50px',
+    background:'url(https://c4.wallpaperflare.com/wallpaper/24/23/796/portrait-display-vertical-pattern-digital-art-wallpaper-preview.jpg)',
+    padding:'30px'
 }
 // const Container = styled(Box)(({ theme }) => ({
 //     margin: '50px 100px',
@@ -44,12 +46,19 @@ const Textarea = styled(TextareaAutosize)`
     width: 100%;
     border: none;
     margin-top: 50px;
-    font-size: 18px;
     &:focus-visible {
         outline: none;
     }
+    width: 100%; 
+    font-size:20px;
+    padding:8px;
+    border-radius:16px;
 `;
-
+const buttonstyle={
+    height: '40px',
+    background: 'linear-gradient(90deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
+    borderRadius:'16px'
+}
 const initialPost = {
     title: '',
     description: '',
@@ -109,7 +118,7 @@ const CreatePost = () => {
                     onChange={(e) => setFile(e.target.files[0])}
                 />
                 <InputTextField onChange={(e) => handleChange(e)} name='title' placeholder="Title" />
-                <Button onClick={() => savePost()} variant="contained" color="primary">Publish</Button>
+                <Button onClick={() => savePost()} style={buttonstyle} variant="contained">Publish</Button>
             </FormControl>
 
             <Textarea

@@ -1,6 +1,10 @@
 
 import { styled, Box, Typography } from '@mui/material';
 
+const poststyle ={
+    background:'background-color: #D9AFD9',
+    backgroundImage: 'linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%)',
+}
 const Container = styled(Box)`
     border: 1px solid #d3cede;
     border-radius: 10px;
@@ -44,7 +48,7 @@ const Post = ({ post }) => {
     } 
 
     return (
-        <Container>
+        <Container style={poststyle}>
             <Image src={url} alt="post" />
             <Text>{post.categories}</Text>
             <Heading>{addEllipsis(post.title, 20)}</Heading>

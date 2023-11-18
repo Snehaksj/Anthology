@@ -3,9 +3,10 @@ import { Box, styled, Typography, Link } from '@mui/material';
 import { GitHub, Instagram, Email } from '@mui/icons-material';
 
 const Banner = styled(Box)`
-    background-image: url(http://mrtaba.ir/image/bg2.jpg);
+    background-image: url(https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg);
     width: 100%;
     height: 50vh;
+    color:white;
     background-position: left 0px top -100px;
     background-size: cover;
 `;
@@ -18,18 +19,23 @@ const Wrapper = styled(Box)`
 `;
 
 const Text = styled(Typography)`
-    color: #878787;
+    color: white;
 `;
 
-
+const bgstyle={
+    background: 'url("https://wallpapers.com/images/featured/grey-5xvepms9fbbi0bmh.jpg")',
+    height:'100vh',
+    backgroundPosition: 'left 0px top -100px',
+    backgroundSize: 'cover'
+};
 const Contact = () => {
     return (
-        <Box>
+        <Box style={bgstyle}>
             <Banner />
             <Wrapper>
-                <Typography variant="h3">Getting in touch is easy!</Typography>    
+                <Typography variant="h3" style={{color:'white'}}>Getting in touch is easy!</Typography>    
                 <Text variant="h5">
-                    Reach out to me : 
+                    Reach out to me :  
                     <Link href="mailto:snehaksj@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
                         <Email />
                     </Link>

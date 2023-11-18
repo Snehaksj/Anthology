@@ -22,17 +22,19 @@ const SubHeading = styled(Typography)`
     background: #FFFFFF;
 `;
 const bannerImageStyle = {
-    background: "url('https://img.freepik.com/free-photo/futuristic-background-with-colorful-glowing-abstract-neon-lights_181624-26329.jpg?w=1060&t=st=1682091473~exp=1682092073~hmac=4b7dadd5a3bc3eb026113acf2992d4e91d6b26afe1fbd52bf9ac473341aa8d3a)",
-    backgroundSize:'cover',
-    width:'1400px',
-    height:'400px',
-    marginTop:'60px',
-}
+    backgroundImage: `url('https://images.unsplash.com/photo-1589497836818-9ad2fa1df1a0?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8MXwxMzYwOTV8fGVufDB8fHx8fA%3D%3D')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    width: '100%',
+    height: '400px',
+    marginTop: '60px',
+    position: 'relative',
+};
 const textHeadingStyle = {
     color:'white',
     position:'absolute',
     marginTop:'120px',
-    marginLeft:'460px',
+    marginLeft:'500px',
     fontSize:'80px',
     fontFamily:'sans-serif'
 }
@@ -40,7 +42,7 @@ const textHeadingStyle2 = {
     color:'white',
     position:'absolute',
     marginTop:'220px',
-    marginLeft:'380px',
+    marginLeft:'400px',
     fontSize:'40px',
     fontFamily:'sans-serif'
 }

@@ -11,8 +11,14 @@ import { DataContext } from '../../context/DataProvider';
 // components
 import Comments from './comments/Comments';
 
+const contentstyle={
+    fontSize:'20px'
+}
 const Container = styled(Box)(({ theme }) => ({
     margin: '50px 100px',
+    color:'white',
+    background:'url("https://wallpaper-house.com/data/out/9/wallpaper2you_363182.jpg")',
+    padding:'30px',
     [theme.breakpoints.down('md')]: {
         margin: 0
     },
@@ -27,6 +33,7 @@ const Image = styled('img')({
 const EditIcon = styled(Edit)`
     margin: 5px;
     padding: 5px;
+    background:white;
     border: 1px solid #878787;
     border-radius: 10px;
 `;
@@ -34,19 +41,21 @@ const EditIcon = styled(Edit)`
 const DeleteIcon = styled(Delete)`
     margin: 5px;
     padding: 5px;
+    background:rgb(226, 128, 128);
     border: 1px solid #878787;
     border-radius: 10px;
 `;
 
 const Heading = styled(Typography)`
     font-size: 38px;
+    text-align:center;
     font-weight: 600;
     text-align: center;
-    margin: 50px 0 10px 0;
+    margin: 1px;
 `;
 
 const Author = styled(Box)(({ theme }) => ({
-    color: '#878787',
+    color: 'white',
     display: 'flex',
     margin: '20px 0',
     [theme.breakpoints.down('sm')]: {
@@ -99,7 +108,7 @@ const DetailView = () => {
                 <Typography style={{marginLeft: 'auto'}}>{new Date(post.createdDate).toDateString()}</Typography>
             </Author>
 
-            <Typography>{post.description}</Typography>
+            <Typography style={contentstyle}>{post.description}</Typography>
             <Comments post={post} />
         </Container>
     )

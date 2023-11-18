@@ -20,9 +20,12 @@ const Image = styled('img')({
 });
 
 const StyledTextArea = styled(TextareaAutosize)`
-    height: 100px !important;
+    height: 40px !important;
     width: 100%; 
+    font-size:20px;
+    padding:8px;
     margin: 0 20px;
+    border-radius:16px;
 `;
 
 const initialValue = {
@@ -66,21 +69,26 @@ const Comments = ({ post }) => {
         setToggle(prev => !prev);
     }
     
+    const buttonstyle={
+        height: '40px',
+        background: 'linear-gradient(90deg, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%)',
+        borderRadius:'16px'
+    }
+
+
     return (
         <Box>
             <Container>
                 <Image src={url} alt="dp" />   
                 <StyledTextArea 
-                    rowsMin={5} 
-                    placeholder="what's on your mind?"
+                    rowsMin={1} 
                     onChange={(e) => handleChange(e)} 
                     value={comment.comments}
                 />
                 <Button 
-                    variant="contained" 
-                    color="primary" 
+                    variant="contained"  
                     size="medium" 
-                    style={{ height: 40 }}
+                    style={buttonstyle}
                     onClick={(e) => addComment(e)}
                 >Post</Button>             
             </Container>

@@ -8,6 +8,7 @@ import { DataContext } from "../../../context/DataProvider";
 
 const Component = styled(Box)`
     margin-top: 30px;
+    color:black;
     background: #F5F5F5;
     padding: 10px;
 `;
