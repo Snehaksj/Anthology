@@ -103,7 +103,7 @@ const Update = () => {
 
             <StyledFormControl>
                 <label htmlFor="fileInput">
-                    <Add fontSize="large" color="action" />
+                    <Add fontSize="large" color='primary'  />
                 </label>
                 <input
                     type="file"
@@ -111,7 +111,7 @@ const Update = () => {
                     style={{ display: "none" }}
                     onChange={(e) => setFile(e.target.files[0])}
                 />
-                <InputTextField onChange={(e) => handleChange(e)} value={post.title} name='title' placeholder="Title" />
+                <InputTextField onChange={(e) => handleChange(e)} value={post.title} style={{color:'white'}} name='title' placeholder="Title" />
                 <Button onClick={() => updateBlogPost()} variant="contained" color="primary">Update</Button>
             </StyledFormControl>
 
